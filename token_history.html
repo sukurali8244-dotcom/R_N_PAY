@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Token History</title>
+    <style>
+        body { background: #f4f7f6; font-family: sans-serif; margin: 0; padding: 15px; }
+        .header { font-size: 20px; font-weight: bold; margin-bottom: 20px; }
+        .t-item { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .green { color: green; font-weight: bold; }
+        .red { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header">Token History</div>
+    
+    <div id="token-list"></div>
+
+    <script>
+        async function loadTokenHistory() {
+            const userId = localStorage.getItem('userId');
+            const response = await fetch(`http://localhost:3000/token-history/${userId}`);
+            const data = await response.json();
+
+            const list = document.getElementById('token-list');
+            list.innerHTML = ""; 
+
+            data.history.forEach(item => {
+                const colorClass = item.type === 'credit' ? 'green' : 'red';
+                const sign = item.type === 'credit' ? '+' : '-';
+                list.innerHTML += `
+                    <div class="t-item">
+                        <div><strong>${item.title}</strong><br><small>${item.desc}</small></div>
+                        <div class="${colorClass}">${sign} ₹ ${item.amount}</div>
+                    </div>
+                `;
+            });
+        }
+        loadTokenHistory();
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recharge History</title>
+    <style>
+        body { background: #f4f7f6; font-family: sans-serif; margin: 0; padding: 15px; }
+        .header { font-size: 20px; font-weight: bold; margin-bottom: 20px; }
+        .item { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; border-left: 5px solid #2575fc; }
+        .status-pending { color: orange; font-weight: bold; }
+        .status-success { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header">Recharge History</div>
+    
+    <div id="history-list"></div>
+
+    <script>
+        async function loadHistory() {
+            const userId = localStorage.getItem('userId');
+            const response = await fetch(`http://localhost:3000/history/${userId}`);
+            const data = await response.json();
+
+            const list = document.getElementById('history-list');
+            list.innerHTML = ""; // पहले लिस्ट खाली करो
+
+            data.history.forEach(item => {
+                const statusClass = item.status === 'Success' ? 'status-success' : 'status-pending';
+                list.innerHTML += `
+                    <div class="item" style="border-left-color: ${item.status === 'Success' ? 'green' : 'orange'};">
+                        <div><strong>₹ ${item.amount}</strong><br><small>${item.date}</small></div>
+                        <div class="${statusClass}">${item.status}</div>
+                    </div>
+                `;
+            });
+        }
+        loadHistory();
+    </script>
+</body>
+</html>

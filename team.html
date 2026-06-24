@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Center</title>
+    <style>
+        body { background: #0d1117; color: #fff; font-family: sans-serif; margin: 0; padding-bottom: 90px; }
+        .header { padding: 25px; font-size: 24px; font-weight: bold; text-align: center; color: #ffbf00; border-bottom: 1px solid #30363d; }
+        .card { background: #161b22; margin: 15px; padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
+        .stats-container { display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; }
+        .stat-item { background: #0d1117; padding: 15px 10px; border-radius: 8px; text-align: center; border: 1px solid #30363d; width: 32%; }
+        .stat-item small { color: #8b949e; font-size: 11px; }
+        .stat-item strong { display: block; font-size: 16px; margin-top: 5px; color: #ffffff; }
+        .btn-copy { width: 100%; padding: 15px; background: #2575fc; border: none; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 15px; }
+        .nav { position: fixed; bottom: 0; width: 100%; background: #0d1117; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #30363d; }
+    </style>
+</head>
+<body>
+
+<div class="header">My Team</div>
+
+<div class="card">
+    <h3 style="margin-top:0;">Team Overview</h3>
+    <div class="stats-container">
+        <div class="stat-item"><small>Total Team</small><strong id="totalTeam">0</strong></div>
+        <div class="stat-item"><small>Today's New</small><strong id="todayNew">0</strong></div>
+        <div class="stat-item"><small>Total Comm.</small><strong id="totalComm">₹0</strong></div>
+    </div>
+</div>
+
+<div class="card" id="referral-section" style="display:none;">
+    <h3>My Invitation Link</h3>
+    <p id="ref-link" style="background:#0d1117; padding:15px; border-radius:5px; border:1px solid #30363d; word-break: break-all;"></p>
+    <button class="btn-copy" onclick="copyLink()">COPY INVITE LINK</button>
+</div>
+
+<div class="card">
+    <h3>Commission Rates</h3>
+    <p>Level 1: <span style="color:#2575fc;">4%</span> | Level 2: <span style="color:#2575fc;">3%</span> | Level 3: <span style="color:#2575fc;">2%</span></p>
+</div>
+
+<div class="nav">
+    <a href="dashboard.html" style="color:white; text-decoration:none;">🏠 Home</a>
+    <a href="deposit.html" style="color:white; text-decoration:none;">💰 Deposit</a>
+    <a href="bank.html" style="color:white; text-decoration:none;">🏦 Bank</a>
+    <a href="team.html" style="color:white; text-decoration:none;">👥 Team</a>
+    <a href="profile.html" style="color:white; text-decoration:none;">👤 Profile</a>
+</div>
+
+<script>
+    async function loadTeamData() {
+        const userId = localStorage.getItem('userId');
+        if (!userId) return;
+
+        // सर्वर से टीम का डेटा लाना
+        const response = await fetch(`http://localhost:3000/team-stats/${userId}`);
+        const data = await response.json();
+
+        if (data.success) {
+            document.getElementById('totalTeam').innerText = data.totalTeam;
+            document.getElementById('totalComm').innerText = "₹" + data.totalComm;
+            document.getElementById('todayNew').innerText = data.todayNew;
+            // अगर यूजर TL या मास्टर है, तो रेफरल लिंक दिखाना
+            if (data.role === 'TL' || data.role === 'Master') {
+                document.getElementById('referral-section').style.display = "block";
+                document.getElementById('ref-link').innerText = "https://yourapp.com/reg?code=" + data.mobile;
+            }
+        }
+    }
+
+    function copyLink() {
+        let link = document.getElementById("ref-link").innerText;
+        navigator.clipboard.writeText(link);
+        alert("Link Copied Successfully!");
+    }
+
+    loadTeamData();
+</script>
+
+</body>
+</html>

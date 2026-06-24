@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RN PAY Dashboard</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: #0d1117; 
+            color: white; 
+            margin: 0; 
+            padding: 0; 
+        }
+        .header { 
+            padding: 20px; 
+            font-size: 22px; 
+            font-weight: bold; 
+            color: #ffffff; 
+        }
+        .banner { 
+            background: linear-gradient(135deg, #1c2630, #2c3e50); 
+            margin: 10px; 
+            padding: 20px; 
+            border-radius: 15px; 
+            text-align: center; 
+            border: 1px solid #444; 
+        }
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px; 
+            padding: 10px; 
+        }
+        .card { 
+            background: #161b22; 
+            padding: 15px; 
+            border-radius: 12px; 
+            border: 1px solid #30363d; 
+        }
+        .card div { font-size: 12px; color: #8b949e; margin-bottom: 5px; }
+        .card h2 { margin: 0; font-size: 18px; }
+        .top-up-btn { 
+            background: linear-gradient(to right, #00c6ff, #0072ff); 
+            color: white; 
+            padding: 15px; 
+            margin: 10px; 
+            border-radius: 10px; 
+            text-align: center; 
+            font-weight: bold; 
+            border: none;
+            cursor: pointer;
+        }
+        .nav { 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            background: #0d1117; 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 15px 0; 
+            border-top: 1px solid #30363d; 
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">RN PAY</div>
+
+    <!-- Banner -->
+    <div class="banner">
+        <h3 style="margin-top:0;">LUCKY SPIN WHEEL</h3>
+        <button style="padding: 8px 20px; background: #ffd700; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">PLAY NOW!</button>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid-container">
+        <div class="card"><div>CURRENT BALANCE</div><h2>$1,250.00</h2></div>
+        <div class="card"><div>TEAM COMMISSION</div><h2>9135.63</h2></div>
+        <div class="card"><div>TEAM ACTIVITY</div><h2>75 Active</h2></div>
+        <div class="card"><div>TOTAL EARNINGS</div><h2>12,450.00</h2></div>
+    </div>
+
+    <div class="top-up-btn">TOP-UP</div>
+
+    <!-- Navigation -->
+    <div class="nav">
+        <a href="dashboard.html" style="color: white; text-decoration: none;"><div>🏠 Home</div></a>
+        <a href="deposit.html" style="color: white; text-decoration: none;"><div>💰 Deposit</div></a>
+        <a href="bank.html" style="color: white; text-decoration: none;"><div>🏦 Bank</div></a>
+        <a href="team.html" style="color: white; text-decoration: none;"><div>👥 Team</div></a>
+        <a href="profile.html" style="color: white; text-decoration: none;"><div>👤 Profile</div></a>
+    </div>
+
+</body>
+</html>

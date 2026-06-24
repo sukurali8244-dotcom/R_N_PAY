@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        body { background: #f4f7f6; color: #333; font-family: sans-serif; margin: 0; padding-bottom: 90px; }
+        .header-bg { background: white; padding: 20px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .profile-top { display: flex; justify-content: space-between; align-items: center; }
+        .logo { width: 50px; height: 50px; border-radius: 12px; }
+        .id-box { background: #f0f0f0; padding: 5px 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .balance-box { margin-top: 20px; text-align: left; }
+        
+        .quota-card { background: white; margin: 20px 15px; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .top-up-btn { background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%); color: white; border: none; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        
+        .menu-list { background: white; margin: 0 15px; border-radius: 15px; padding: 10px 0; }
+        .menu-item { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; cursor: pointer; }
+        .nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
+    </style>
+</head>
+<body>
+
+<div class="header-bg">
+    <div class="profile-top">
+        <img src="13932.jpg" class="logo" alt="Logo"> 
+        <div class="id-box" onclick="copyID()">ID: <span id="uid">Loading...</span> 📋</div>
+    </div>
+    <div class="balance-box">
+        <small>Available Balance</small>
+        <div style="font-size: 28px; font-weight: bold;" id="balance">₹ 0.00</div>
+    </div>
+</div>
+
+<div class="quota-card">
+    <div>
+        <small><strong>Quota</strong></small><br>
+        <small>Current: 1,00,000 | Pending: ₹0.00</small>
+    </div>
+    <button class="top-up-btn" onclick="location.href='deposit.html'">Top Up</button>
+</div>
+
+<div class="menu-list">
+    <div class="menu-item" onclick="location.href='recharge_history.html'">💳 Recharge History <span>></span></div>
+    <div class="menu-item" onclick="location.href='token_history.html'">🔄 Token History <span>></span></div>
+    <div class="menu-item" onclick="location.href='bank.html'">🔗 Link Bank Account <span>></span></div>
+    <div class="menu-item">✏️ Edit Profile <span>></span></div>
+    <div class="menu-item" onclick="location.href='contact.html'">📞 Contact us <span>></span></div>
+    <div class="menu-item" onclick="location.href='team.html'">👥 My Team <span>></span></div>
+    <div class="menu-item" style="color:red;" onclick="logout()">📤 Sign Out <span>></span></div>
+</div>
+
+<div class="nav">
+    <a href="dashboard.html" style="text-decoration:none; color:#555;">🏠 Home</a>
+    <a href="deposit.html" style="text-decoration:none; color:#555;">💰 Deposit</a>
+    <a href="bank.html" style="text-decoration:none; color:#555;">🏦 Bank</a>
+    <a href="team.html" style="text-decoration:none; color:#555;">👥 Team</a>
+    <a href="profile.html" style="text-decoration:none; color:#555;">👤 Profile</a>
+</div>
+
+<script>
+    // पेज खुलते ही डेटा सर्वर से ले आएगा
+    async function loadProfile() {
+        const userId = localStorage.getItem('userId'); // लॉग-इन के बाद यहाँ ID सेव होगी
+        if (!userId) return;
+
+        const response = await fetch(`http://localhost:3000/profile/${userId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            document.getElementById('uid').innerText = data.userId;
+            document.getElementById('balance').innerText = "₹ " + data.balance.toFixed(2);
+        }
+    }
+
+    function copyID() {
+        let id = document.getElementById('uid').innerText;
+        navigator.clipboard.writeText(id);
+        alert("ID Copied!");
+    }
+
+    function logout() {
+        localStorage.removeItem('userId');
+        window.location.href = "login.html";
+    }
+
+    loadProfile(); // फंक्शन रन कर
+</script>
+</body>
+</html>

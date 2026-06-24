@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Information</title>
+    <style>
+        body { background: #0d1117; color: #fff; font-family: sans-serif; margin: 0; padding-bottom: 90px; }
+        .header { padding: 25px; font-size: 24px; font-weight: bold; text-align: center; color: #ffbf00; border-bottom: 1px solid #30363d; }
+        .card { background: #161b22; margin: 15px; padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
+        .input-field { width: 100%; padding: 15px; margin: 10px 0; background: #0d1117; border: 1px solid #30363d; color: white; border-radius: 8px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 15px; background: #2575fc; border: none; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; font-size: 16px; }
+        #saved-card { display: none; text-align: center; border: 1px solid #2575fc; }
+        .nav { position: fixed; bottom: 0; width: 100%; background: #0d1117; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #30363d; }
+    </style>
+</head>
+<body>
+
+<div class="header">Bank Information</div>
+
+<div id="form-card" class="card">
+    <input type="text" id="name" class="input-field" placeholder="Account Holder Name">
+    <input list="all-banks" id="bank-input" class="input-field" placeholder="Search any Bank in India...">
+<datalist id="all-banks">
+    <option value="State Bank of India">
+    <option value="HDFC Bank">
+    <option value="ICICI Bank">
+    <option value="Axis Bank">
+    <option value="Kotak Mahindra Bank">
+    <option value="Punjab National Bank">
+    <option value="Bank of Baroda">
+    <option value="Canara Bank">
+    <option value="Union Bank of India">
+    <option value="Bank of India">
+    <option value="Indian Bank">
+    <option value="Central Bank of India">
+    <option value="IDBI Bank">
+    <option value="Indian Overseas Bank">
+    <option value="UCO Bank">
+    <option value="Bank of Maharashtra">
+    <option value="Punjab and Sind Bank">
+    <option value="Yes Bank">
+    <option value="IndusInd Bank">
+    <option value="IDFC First Bank">
+    <option value="Federal Bank">
+    <option value="Bandhan Bank">
+    <option value="City Union Bank">
+    <option value="Dhanlaxmi Bank">
+    <option value="South Indian Bank">
+    <option value="Jammu and Kashmir Bank">
+    <option value="Karur Vysya Bank">
+    <option value="Lakshmi Vilas Bank">
+    <option value="Nainital Bank">
+    <option value="RBL Bank">
+    <option value="Tamilnad Mercantile Bank">
+    <option value="ESAF Small Finance Bank">
+    <option value="Equitas Small Finance Bank">
+    <option value="AU Small Finance Bank">
+    <option value="Jana Small Finance Bank">
+    <option value="Suryoday Small Finance Bank">
+    <option value="Ujjivan Small Finance Bank">
+    <option value="Utkarsh Small Finance Bank">
+    <option value="Paytm Payments Bank">
+    <option value="Airtel Payments Bank">
+    <option value="Fino Payments Bank">
+</datalist>
+    <input type="text" id="acc" class="input-field" placeholder="Account Number">
+    <input type="text" id="ifsc" class="input-field" placeholder="IFSC Code">
+    <button class="btn" onclick="saveBank()">SAVE BANK DETAILS</button>
+</div>
+
+<div id="saved-card" class="card">
+    <h3 style="color:#ffbf00;">Bank Account Saved</h3>
+    <p id="display-info" style="font-size: 18px;"></p>
+    <button class="btn" style="background:#dc3545;" onclick="deleteBank()">DELETE & CHANGE</button>
+</div>
+
+<div class="nav">
+    <a href="dashboard.html" style="color:white; text-decoration:none;">🏠 Home</a>
+    <a href="deposit.html" style="color:white; text-decoration:none;">💰 Deposit</a>
+    <a href="bank.html" style="color:white; text-decoration:none;">🏦 Bank</a>
+    <a href="team.html" style="color:white; text-decoration:none;">👥 Team</a>
+    <a href="profile.html" style="color:white; text-decoration:none;">👤 Profile</a>
+</div>
+
+<script>
+    async function saveBank() {
+        const userId = localStorage.getItem('userId');
+        const bankData = {
+            userId: userId,
+            holderName: document.getElementById('name').value,
+            bankName: document.getElementById('bank-input').value,
+            accNumber: document.getElementById('acc').value,
+            ifsc: document.getElementById('ifsc').value
+        };
+
+        const response = await fetch('http://localhost:3000/save-bank', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bankData)
+        });
+
+        const result = await response.json();
+        if(result.success) {
+            alert("Bank Saved!");
+            location.reload();
+        }
+    }
+
+    // सर्वर से डेटा चेक करने के लिए
+    async function loadBank() {
+        const userId = localStorage.getItem('userId');
+        const response = await fetch(`http://localhost:3000/get-bank/${userId}`);
+        const data = await response.json();
+        if(data.success && data.bank) {
+            document.getElementById('form-card').style.display = 'none';
+            document.getElementById('saved-card').style.display = 'block';
+            document.getElementById('display-info').innerHTML = `Bank: ${data.bank.bankName}<br>A/c: ${data.bank.accNumber}<br>Holder: ${data.bank.holderName}`;
+        }
+    }
+    
+    function deleteBank() { alert("Contact Admin to change!"); }
+    window.onload = loadBank;
+</script>
+</body>
+</html>
