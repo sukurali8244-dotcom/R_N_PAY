@@ -53,29 +53,37 @@
         const userId = localStorage.getItem('userId');
         if (!userId) return;
 
-        // सर्वर से टीम का डेटा लाना
-        const response = await fetch(`http://localhost:3000/team-stats/${userId}`);
-        const data = await response.json();
+        try {
+            // आपकी लाइव रेंडर लिंक यहाँ भी सेट कर दी है
+            const response = await fetch(`https://r-n-pay.onrender.com/team-stats/${userId}`);
+            const data = await response.json();
 
-        if (data.success) {
-            document.getElementById('totalTeam').innerText = data.totalTeam;
-            document.getElementById('totalComm').innerText = "₹" + data.totalComm;
-            document.getElementById('todayNew').innerText = data.todayNew;
-            // अगर यूजर TL या मास्टर है, तो रेफरल लिंक दिखाना
-            if (data.role === 'TL' || data.role === 'Master') {
-                document.getElementById('referral-section').style.display = "block";
-                document.getElementById('ref-link').innerText = "https://yourapp.com/reg?code=" + data.mobile;
+            if (data.success) {
+                document.getElementById('totalTeam').innerText = data.totalTeam || 0;
+                document.getElementById('totalComm').innerText = "₹" + (data.totalComm || 0);
+                document.getElementById('todayNew').innerText = data.todayNew || 0;
+                
+                // रोल चेक (TL या Master होने पर लिंक खुलेगा)
+                const role = data.role ? data.role.toUpperCase() : '';
+                if (role === 'TL' || role === 'MASTER') {
+                    document.getElementById('referral-section').style.display = "block";
+                    // लाइव रजिस्ट्रेशन लिंक
+                    document.getElementById('ref-link').innerText = "https://r-n-pay.onrender.com/reg.html?code=" + (data.mobile || userId);
+                }
             }
+        } catch (error) {
+            console.error("Error loading team data:", error);
         }
     }
 
     function copyLink() {
         let link = document.getElementById("ref-link").innerText;
+        if(!link) return;
         navigator.clipboard.writeText(link);
         alert("Link Copied Successfully!");
     }
 
-    loadTeamData();
+    window.onload = loadTeamData;
 </script>
 
 </body>
